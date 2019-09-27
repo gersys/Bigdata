@@ -15,7 +15,7 @@ mat = np.genfromtxt('Real estate valuation data set.csv',
 # load feature
 feat = np.genfromtxt('Real estate valuation data set.csv', 
                     delimiter = ',', dtype = str, skip_footer= mat.shape[0] -1)
-feat = list(feat[1:-1]) 
+feat = list(feat[1:-1])  #feature meaning column
 
 print(mat)
 print("----------------------------")
@@ -69,9 +69,12 @@ alphas = [0.01, 0.1, 0.5, 1, 5, 10, 100]
 mse_list = []
 #finetune the alpha using the validation set
 """ -------- Your Answer -------- """
-
-
-
+for alpha in alphas:
+    lasso = linear_model.Lasso(alpha=alpha)
+    lasso.fit(train_X, train_Y)
+    prediction = lasso.predict(val_X)
+    mse= mean_squared_error(val_Y,prediction)
+    mse_list.append(mse)
 
 
 """ ----------------------------- """
@@ -79,9 +82,9 @@ idx = mse_list.index(min(mse_list))
 print("Lasso best alpha : ", alphas[idx])
 #evaluation
 """ -------- Your Answer -------- """
-
-
-
+lasso = linear_model.Lasso(alpha=alphas[idx])
+lasso.fit(train_X, train_Y)
+pred_Y = lasso.predict(test_X)
 """ ----------------------------- """
 mse = mean_squared_error(pred_Y, test_Y)
 rmse = np.power(mse, 0.5)
@@ -96,19 +99,20 @@ print("")
 alphas = [0.01, 0.1, 0.5, 1, 5, 10, 100]
 mse_list = []
 """ -------- Your Answer -------- """
-
-
-
-
-
+for alpha in alphas:
+    ridge= linear_model.Ridge(alpha=alpha)
+    ridge.fit(train_X, train_Y)
+    pred_Y = ridge.predict(val_X)
+    mse = mean_squared_error(pred_Y, val_Y)
+    mse_list.append(mse)
 """ ----------------------------- """
 idx = mse_list.index(min(mse_list))
 print("Ridge alpha : ", alphas[idx])
 #evaluation
 """ -------- Your Answer -------- """
-
-
-
+ridge = linear_model.Ridge(alpha=alphas[idx])
+ridge.fit(train_X, train_Y)
+y_pred = ridge.predict(test_X)
 """ ----------------------------- """
 mse = mean_squared_error(y_pred, test_Y)
 rmse = np.power(mse, 0.5)
