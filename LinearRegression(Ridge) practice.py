@@ -8,12 +8,12 @@ data = np.loadtxt("weight-height.csv", delimiter = ',', skiprows = 1, usecols = 
 X = data[:int(data.shape[0]/2),0]
 y = data[:int(data.shape[0]/2),1]
 
-X_train, X_test, y_train, y_test = train_test_split(
+X_train, X_test, y_train, y_test = train_test_split( #test set
         X, y, test_size = 0.2, random_state = 42)
 
 X_train, X_val, y_train, y_val = train_test_split(
-        X_train, y_train, test_size = 0.33, random_state = 42)
-
+        X_train, y_train, test_size = 0.33, random_state = 42) # validation set
+# transformation for model fitting
 X_train = X_train.reshape(-1,1)
 X_test = X_test.reshape(-1,1)
 X_val = X_val.reshape(-1,1)
@@ -21,19 +21,22 @@ y_train = y_train.reshape(-1,1)
 y_test = y_test.reshape(-1,1)
 y_val = y_val.reshape(-1,1)
 
+# alpha is regulazation constants
 alphas = [0.0001, 0.001, 0.01, 0.1, 1]
 mseList = []
 
+#find optimal alpha
 for alpha in alphas:
     ridge = linear_model.Ridge(alpha = alpha)
     ridge.fit(X_train, y_train)
     prediction = ridge.predict(X_val)
     mse = mean_squared_error(y_val, prediction)
     mseList.append(mse)
-    
+
+#save optimal alpha
 idx = mseList.index(min(mseList))
 
-# Create linear regression object
+# Create linear regression object of optimal alpha
 ridge = linear_model.Ridge(alphas[idx])
 
 # Train the model using the training sets
